@@ -3,8 +3,14 @@
 
 <template>
   <div class="flex gap-3 container mx-auto">
-    <router-link to="/">Home</router-link>
-    <router-link to="/examples">Examples</router-link>
+    <ul class="flex gap-2 m-4">
+      <li class="inline-block py-2 px-4">
+        <router-link to="/">Home</router-link>
+      </li>
+      <li class="inline-block py-2 px-4">
+        <router-link to="/examples">Examples</router-link>
+      </li>
+    </ul>
   </div>
   <div class="p-2 container mx-auto">
     <router-view></router-view>

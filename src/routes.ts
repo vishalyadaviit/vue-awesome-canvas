@@ -21,6 +21,10 @@ const router = createRouter({
           path: "charts",
           component: () => import("@/pages/examples/charts.vue"),
         },
+        {
+          path: "bouncing-balls",
+          component: () => import("@/pages/examples/bouncing-balls.vue"),
+        },
       ],
     },
   ],

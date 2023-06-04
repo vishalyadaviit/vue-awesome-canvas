@@ -10,6 +10,9 @@
                 Shapes</router-link>
             <router-link to="/examples/charts"
                 class="text-slate-800 hover:bg-gray-100 rounded-md px-3 py-2 text-sm font-medium">Charts</router-link>
+            <router-link to="/examples/bouncing-balls"
+                class="text-slate-800 hover:bg-gray-100 rounded-md px-3 py-2 text-sm font-medium">Bouncing
+                Balls</router-link>
         </div>
         <router-view></router-view>
 
