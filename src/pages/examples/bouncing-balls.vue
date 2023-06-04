@@ -3,19 +3,11 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const canvasRef = ref(null)
 const canvasWidth = 1000;
-const canvasHeight = 400;
+const canvasHeight = 600;
 let circlesArray: Array<any> = []
 let requestId: number;
 const bubbleOffset = 50;
 const maxRadius = 50;
-
-// const colorPallete = [
-//     '#8ecae6',
-//     '#219ebc',
-//     '#023047',
-//     '#ffb703',
-//     '#fb8500'
-// ];
 
 const colorPallete = [
     '#ffbe0b',
@@ -32,11 +24,10 @@ const relativeMouseReference = {
 
 function setMouseCoords(event: any) {
     const canvas: HTMLCanvasElement = canvasRef.value!
-    console.log(canvas.offsetLeft)
-    console.log(canvas.offsetTop)
-
-    relativeMouseReference.x = event.x - (canvas?.offsetLeft || 0);
-    relativeMouseReference.y = event.y - (canvas?.offsetTop || 0);
+    // console.log(`canvas.offsetLeft=> ${canvas.offsetLeft}`)
+    // console.log(`canvas.offsetTop => ${canvas.offsetTop}`)
+    relativeMouseReference.x = event.x - canvas.offsetLeft;
+    relativeMouseReference.y = event.y - canvas.offsetTop;
 }
 
 window.addEventListener('mousemove', setMouseCoords)
@@ -63,7 +54,6 @@ class Circle {
     }
 
     draw() {
-        // console.log(`draw calkkled`)
         this.c.beginPath()
         this.c.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.c.strokeStyle = this.color;
@@ -83,16 +73,10 @@ class Circle {
         }
         this.x += this.dx;
         this.y += this.dy;
-        // console.log(`relativeMouseReference`)
-        // console.log(relativeMouseReference)
 
         if (relativeMouseReference.x > 0 && relativeMouseReference.y > 0) {
-            if (this.x < relativeMouseReference.x + bubbleOffset && this.x > relativeMouseReference.x - bubbleOffset &&
-                this.y < relativeMouseReference.y + bubbleOffset && this.y > relativeMouseReference.y - bubbleOffset) {
-
-                // if (relativeMouseReference.x - this.x < bubbleOffset && relativeMouseReference.x - this.x > -bubbleOffset
-                //     && relativeMouseReference.y - this.y < bubbleOffset && relativeMouseReference.y - this.y > -bubbleOffset
-                // ) {
+            if (this.x < (relativeMouseReference.x + bubbleOffset) && this.x > (relativeMouseReference.x - bubbleOffset) &&
+                this.y < (relativeMouseReference.y + bubbleOffset) && this.y > (relativeMouseReference.y - bubbleOffset)) {
                 if (this.radius < maxRadius) {
                     this.radius += 1
                 }
@@ -100,8 +84,6 @@ class Circle {
                 this.radius -= 1
             }
         }
-
-
         this.draw();
     }
 }
