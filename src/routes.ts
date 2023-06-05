@@ -25,6 +25,10 @@ const router = createRouter({
           path: "bouncing-balls",
           component: () => import("@/pages/examples/bouncing-balls.vue"),
         },
+        {
+          path: "gravity",
+          component: () => import("@/pages/examples/gravity.vue"),
+        },
       ],
     },
   ],
