@@ -29,6 +29,10 @@ const router = createRouter({
           path: "gravity",
           component: () => import("@/pages/examples/gravity.vue"),
         },
+        {
+          path: "earth-mars",
+          component: () => import("@/pages/examples/earth-mars.vue"),
+        },
       ],
     },
   ],
