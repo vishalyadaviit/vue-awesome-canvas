@@ -1,163 +1,17 @@
 <script lang="ts" setup>
-import { isInDestructureAssignment } from '@vue/compiler-core';
-import { onMounted, onBeforeUnmount, ref, withCtx } from 'vue';
-const canvasRef = ref(null);
-const canvasWidth = 1000;
-const canvasHeight = 1000;
-const earthOrbitDistance = 150;
-const marsOrbitDistance = 450;
-let requestId: number;
-let counter = 0;
-let twoPlanets;
-import earth from '@/assets/earth.jpg'
-
-function createSun(c: CanvasRenderingContext2D) {
-    // c.strokeStyle = 'orange'
-    c.fillStyle = '#ff6c00'
-
-    // c.moveTo(canvasWidth/2, canvasHeight/2)
-    c.beginPath()
-    c.arc(canvasWidth / 2, canvasHeight / 2, 30, 0, 2 * Math.PI)
-    c.fill();
-}
-
-
-function createMarsOrbit(c: CanvasRenderingContext2D) {
-    c.strokeStyle = 'white'
-    c.lineWidth = 0.25
-    // c.moveTo(canvasWidth/2, canvasHeight/2)
-    c.beginPath()
-    c.arc(canvasWidth / 2, canvasHeight / 2, marsOrbitDistance, 0, 2 * Math.PI)
-    c.stroke();
-
-}
-
-function createEarthOrbit(c: CanvasRenderingContext2D) {
-    c.strokeStyle = 'white'
-    // c.moveTo(canvasWidth/2, canvasHeight/2)
-    c.beginPath()
-    c.arc(canvasWidth / 2, canvasHeight / 2, earthOrbitDistance, 0, 2 * Math.PI)
-    c.stroke();
-}
-
-
-class Planet {
-    c: CanvasRenderingContext2D
-    orbitDistance: number
-    angularSpeed: number
-    dTheta: number
-    x: number
-    y: number
-    planetSize: number;
-    earthXPos: number
-    earthYPos: number
-
-    constructor(c: CanvasRenderingContext2D, orbitDistance: number, angularSpeed: number, planetSize: number) {
-        this.c = c
-        this.orbitDistance = orbitDistance
-        this.angularSpeed = angularSpeed
-        this.dTheta = 0;
-        this.planetSize = planetSize
-
-        this.x = canvasWidth / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
-        this.y = canvasHeight / 2 + this.orbitDistance * Math.sin((this.dTheta / 180) * Math.PI)
-
-        this.earthXPos = canvasWidth / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
-        this.earthYPos = canvasHeight / 2 + this.orbitDistance * Math.sin((this.dTheta / 180) * Math.PI)
-    }
-
-    draw() {
-        // this.c.beginPath();
-        // this.c.moveTo(this.x, this.y);
-        // this.c.lineTo(canvasWidth / 2, canvasHeight / 2)
-        // this.c.stroke()
-
-        console.log(`createMarsOrbit ca;l;ed`)
-        console.log(earthOrbitDistance);
-        this.c.translate(canvasWidth / 2, canvasHeight / 2);
-
-
-        const img = new Image()
-        // const earthXPos = (canvasWidth / 2) + earthOrbitDistance - earthSize / 2
-
-        // const earthYPos = (canvasHeight / 2) + -earthSize / 2
-        console.log(this.earthXPos)
-        console.log(this.earthYPos)
-
-        img.onload = () => {
-            this.c.drawImage(img, this.earthXPos, this.earthYPos)
-        }
-        // c.rotate((45 * Math.PI) / 180);
-        img.src = earth
-    }
-
-    update() {
-        this.dTheta += this.angularSpeed
-        this.x = canvasWidth / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
-        this.y = canvasHeight / 2 + this.orbitDistance * -(Math.sin((this.dTheta / 180) * Math.PI))
-
-        this.earthXPos = canvasWidth / 2 + (this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI) - (this.planetSize / 2) * Math.cos((this.dTheta / 180) * Math.PI))
-        this.earthYPos = canvasHeight / 2 + (this.orbitDistance * -Math.sin((this.dTheta / 180) * Math.PI) + (this.planetSize / 2 * -Math.sin((this.dTheta / 180) * Math.PI)))
-        // this.draw()
-    }
-}
-
-class DrawTwoPlanetRelativePosition {
-    c: CanvasRenderingContext2D
-    earth: Planet
-    mars: Planet
-
-    constructor(c: CanvasRenderingContext2D) {
-        this.c = c
-        this.earth = new Planet(c, earthOrbitDistance, 9, 48)
-        this.mars = new Planet(c, marsOrbitDistance, 0.5, 48)
-    }
-
-    draw() {
-        this.c.beginPath();
-        this.c.moveTo(this.mars.x, this.mars.y);
-        this.c.lineTo(this.earth.x, this.earth.y)
-        this.c.stroke()
-    }
-
-    update() {
-        this.earth.update();
-        this.mars.update();
-        this.draw();
-    }
-}
-
-function animate(c: CanvasRenderingContext2D) {
-    counter++;
-    console.log(`counter called`, counter)
-    if (counter <= 1080) {
-        requestId = requestAnimationFrame(() => animate(c));
-        twoPlanets.update();
-        // mars.update();
-    }
-}
-
-onMounted(() => {
-    const canvas: HTMLCanvasElement = canvasRef.value!
-    canvas.height = canvasHeight;
-    canvas.width = canvasWidth;
-    const c: CanvasRenderingContext2D = canvas.getContext('2d');
-    createSun(c);
-    createMarsOrbit(c);
-    createEarthOrbit(c);
-
-    twoPlanets = new DrawTwoPlanetRelativePosition(c)
-    // drawEarthLines(c);
-    animate(c);
-})
-
-onBeforeUnmount(() => {
-    cancelAnimationFrame(requestId)
-})
+import DrawTwoPlanet from '@/components/canvas/outer-space/DrawTwoPlanetRelativePosition.vue';
 
 </script>
 <template>
-    <canvas style="background-color: black;" ref="canvasRef">
+    <DrawTwoPlanet :inner-planet-speed="9" :inner-planet-orbit-distance="75" :outer-planet-speed="0.5"></DrawTwoPlanet>
+    <DrawTwoPlanet :inner-planet-speed="0.5" :inner-planet-orbit-distance="50" :outer-planet-speed="9"></DrawTwoPlanet>
 
-    </canvas>
+    <DrawTwoPlanet :inner-planet-speed="12" :inner-planet-orbit-distance="200" :outer-planet-speed="0.5"
+        :outer-planet-orbit-distance="240">
+    </DrawTwoPlanet>
+    <DrawTwoPlanet :inner-planet-speed="1" :inner-planet-orbit-distance="150" :outer-planet-speed="10"
+        :outer-planet-orbit-distance="240"></DrawTwoPlanet>
+
+    <DrawTwoPlanet :inner-planet-speed="1" :inner-planet-orbit-distance="75" :outer-planet-speed="5"
+        :outer-planet-orbit-distance="240"></DrawTwoPlanet>
 </template>
