@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { defineProps, onMounted, onBeforeUnmount, ref, withCtx } from 'vue';
+import { defineProps, onMounted, onBeforeUnmount, ref } from 'vue';
 const canvasRef = ref(null);
 const canvasWidth = 500;
 const canvasHeight = 500;
 let requestId: number;
 let counter = 0;
 let twoPlanets;
-import earth from '@/assets/earth.jpg'
+import earthSrc from '@/assets/earth.webp'
+import marsSrc from '@/assets/mars.png'
 
 const props = defineProps({
     innerPlanetSpeed: {
@@ -30,7 +31,6 @@ const props = defineProps({
 function createSun(c: CanvasRenderingContext2D) {
     // c.strokeStyle = 'orange'
     c.fillStyle = '#ff6c00'
-
     // c.moveTo(canvasWidth/2, canvasHeight/2)
     c.beginPath()
     c.arc(canvasWidth / 2, canvasHeight / 2, 30, 0, 2 * Math.PI)
@@ -41,16 +41,13 @@ function createSun(c: CanvasRenderingContext2D) {
 function createMarsOrbit(c: CanvasRenderingContext2D) {
     c.strokeStyle = 'white'
     c.lineWidth = 0.25
-    // c.moveTo(canvasWidth/2, canvasHeight/2)
     c.beginPath()
     c.arc(canvasWidth / 2, canvasHeight / 2, props.outerPlanetOrbitDistance, 0, 2 * Math.PI)
     c.stroke();
-
 }
 
 function createEarthOrbit(c: CanvasRenderingContext2D) {
     c.strokeStyle = 'white'
-    // c.moveTo(canvasWidth/2, canvasHeight/2)
     c.beginPath()
     c.arc(canvasWidth / 2, canvasHeight / 2, props.innerPlanetOrbitDistance, 0, 2 * Math.PI)
     c.stroke();
@@ -65,10 +62,11 @@ class Planet {
     x: number
     y: number
     planetSize: number;
-    earthXPos: number
-    earthYPos: number
+    planetXPos: number
+    planetYPos: number
+    img: HTMLImageElement
 
-    constructor(c: CanvasRenderingContext2D, orbitDistance: number, angularSpeed: number, planetSize: number) {
+    constructor(c: CanvasRenderingContext2D, orbitDistance: number, angularSpeed: number, planetImgSrc: string, planetSize: number) {
         this.c = c
         this.orbitDistance = orbitDistance
         this.angularSpeed = angularSpeed
@@ -78,33 +76,18 @@ class Planet {
         this.x = canvasWidth / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
         this.y = canvasHeight / 2 + this.orbitDistance * Math.sin((this.dTheta / 180) * Math.PI)
 
-        this.earthXPos = canvasWidth / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
-        this.earthYPos = canvasHeight / 2 + this.orbitDistance * Math.sin((this.dTheta / 180) * Math.PI)
+        this.planetXPos = canvasWidth / 2 - this.planetSize / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
+        this.planetYPos = canvasHeight / 2 - this.planetSize / 2 + this.orbitDistance * -(Math.sin((this.dTheta / 180) * Math.PI))
+
+        this.img = new Image()
+        this.img.onload = () => {
+            this.c.drawImage(this.img, this.planetXPos, this.planetYPos, this.planetSize, this.planetSize)
+        }
+        this.img.src = planetImgSrc
     }
 
     draw() {
-        // this.c.beginPath();
-        // this.c.moveTo(this.x, this.y);
-        // this.c.lineTo(canvasWidth / 2, canvasHeight / 2)
-        // this.c.stroke()
-
-        console.log(`createMarsOrbit ca;l;ed`)
-        console.log(props.innerPlanetOrbitDistance);
-        this.c.translate(canvasWidth / 2, canvasHeight / 2);
-
-
-        const img = new Image()
-        // const earthXPos = (canvasWidth / 2) + innerPlanetOrbitDistance - earthSize / 2
-
-        // const earthYPos = (canvasHeight / 2) + -earthSize / 2
-        console.log(this.earthXPos)
-        console.log(this.earthYPos)
-
-        img.onload = () => {
-            this.c.drawImage(img, this.earthXPos, this.earthYPos)
-        }
-        // c.rotate((45 * Math.PI) / 180);
-        img.src = earth
+        this.c.drawImage(this.img, this.planetXPos, this.planetYPos, this.planetSize, this.planetSize)
     }
 
     update() {
@@ -112,9 +95,9 @@ class Planet {
         this.x = canvasWidth / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
         this.y = canvasHeight / 2 + this.orbitDistance * -(Math.sin((this.dTheta / 180) * Math.PI))
 
-        this.earthXPos = canvasWidth / 2 + (this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI) - (this.planetSize / 2) * Math.cos((this.dTheta / 180) * Math.PI))
-        this.earthYPos = canvasHeight / 2 + (this.orbitDistance * -Math.sin((this.dTheta / 180) * Math.PI) + (this.planetSize / 2 * -Math.sin((this.dTheta / 180) * Math.PI)))
-        // this.draw()
+        this.planetXPos = canvasWidth / 2 - this.planetSize / 2 + this.orbitDistance * Math.cos((this.dTheta / 180) * Math.PI)
+        this.planetYPos = canvasHeight / 2 - this.planetSize / 2 + this.orbitDistance * -(Math.sin((this.dTheta / 180) * Math.PI))
+        this.draw()
     }
 }
 
@@ -125,8 +108,8 @@ class DrawTwoPlanetRelativePosition {
 
     constructor(c: CanvasRenderingContext2D) {
         this.c = c
-        this.earth = new Planet(c, props.innerPlanetOrbitDistance, props.innerPlanetSpeed, 48)
-        this.mars = new Planet(c, props.outerPlanetOrbitDistance, props.outerPlanetSpeed, 48)
+        this.earth = new Planet(c, props.innerPlanetOrbitDistance, props.innerPlanetSpeed, earthSrc, 24)
+        this.mars = new Planet(c, props.outerPlanetOrbitDistance, props.outerPlanetSpeed, marsSrc, 36)
     }
 
     draw() {
@@ -145,11 +128,10 @@ class DrawTwoPlanetRelativePosition {
 
 function animate(c: CanvasRenderingContext2D) {
     counter++;
-    console.log(`counter called`, counter)
-    if (counter <= 1080) {
+    // console.log(`counter called`, counter)
+    if (counter <= 360) {
         requestId = requestAnimationFrame(() => animate(c));
         twoPlanets.update();
-        // mars.update();
     }
 }
 
@@ -163,7 +145,6 @@ onMounted(() => {
     createEarthOrbit(c);
 
     twoPlanets = new DrawTwoPlanetRelativePosition(c)
-    // drawEarthLines(c);
     animate(c);
 })
 
@@ -173,7 +154,5 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-    <canvas class="inline-block" style="background-color: black;" ref="canvasRef">
-
-    </canvas>
+    <canvas class="inline-block" style="background-color: black;" ref="canvasRef"></canvas>
 </template>
