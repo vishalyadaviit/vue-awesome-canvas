@@ -33,6 +33,10 @@ const router = createRouter({
           path: "earth-mars",
           component: () => import("@/pages/examples/earth-mars.vue"),
         },
+        {
+          path: "rings",
+          component: () => import("@/pages/examples/rings.vue"),
+        },
       ],
     },
   ],

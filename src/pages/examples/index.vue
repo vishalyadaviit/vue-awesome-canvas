@@ -21,6 +21,10 @@ const exampleNavs = [
         name: 'Earth Mars',
         to: '/examples/earth-mars'
     },
+    {
+        name: 'Rings',
+        to: '/examples/rings'
+    },
 ]
 
 </script>
