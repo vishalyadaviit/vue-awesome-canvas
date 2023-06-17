@@ -165,7 +165,6 @@ class DrawTwoPlanetRelativePosition {
 
 function animate(c: CanvasRenderingContext2D) {
     counter++;
-    // console.log(`counter called`, counter)
     if (counter <= 2160) {
         c.clearRect(0, 0, canvasWidth, canvasHeight)
         twoPlanets.update();

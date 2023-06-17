@@ -24,8 +24,6 @@ const relativeMouseReference = {
 
 function setMouseCoords(event: any) {
     const canvas: HTMLCanvasElement = canvasRef.value!
-    // console.log(`canvas.offsetLeft=> ${canvas.offsetLeft}`)
-    // console.log(`canvas.offsetTop => ${canvas.offsetTop}`)
     relativeMouseReference.x = event.x - canvas.offsetLeft;
     relativeMouseReference.y = event.y - canvas.offsetTop;
 }

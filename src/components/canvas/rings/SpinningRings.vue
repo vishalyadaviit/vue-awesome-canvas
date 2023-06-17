@@ -67,12 +67,10 @@ class Particle {
     draw(lastPoint) {
         this.c.beginPath()
         this.c.strokeStyle = this.color
-        // this.c.fillRect(this.x, this.y, this.size, this.size)
         this.c.lineWidth = this.size
         this.c.moveTo(lastPoint.x, lastPoint.y)
         this.c.lineTo(this.x, this.y)
         this.c.stroke();
-        this.c.closePath();
     }
 
     update() {
@@ -89,7 +87,6 @@ class Particle {
 
 function animate(c: CanvasRenderingContext2D) {
     requestId = requestAnimationFrame(() => { animate(c) })
-    // console.log('requestId', requestId)
     c.fillStyle = 'rgba(0,0,0,0.05)'
     c.fillRect(0, 0, canvasWidth, canvasHeight)
 
