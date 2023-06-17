@@ -3,15 +3,16 @@ import DrawTwoPlanet from '@/components/canvas/outer-space/DrawTwoPlanetRelative
 
 </script>
 <template>
-    <DrawTwoPlanet :inner-planet-speed="9" :inner-planet-orbit-distance="75" :outer-planet-speed="0.5"></DrawTwoPlanet>
-    <DrawTwoPlanet :inner-planet-speed="0.5" :inner-planet-orbit-distance="50" :outer-planet-speed="9"></DrawTwoPlanet>
+    <DrawTwoPlanet :inner-planet-speed="1.35" :inner-planet-orbit-distance="250" :outer-planet-speed="3.5"
+        :outer-planet-orbit-distance="330"></DrawTwoPlanet>
 
-    <DrawTwoPlanet :inner-planet-speed="12" :inner-planet-orbit-distance="200" :outer-planet-speed="0.5"
-        :outer-planet-orbit-distance="240">
+    <DrawTwoPlanet :inner-planet-speed="9" :inner-planet-orbit-distance="115" :outer-planet-orbit-distance="330"
+        :outer-planet-speed="0.5"></DrawTwoPlanet>
+    <DrawTwoPlanet :inner-planet-speed="1.7" :inner-planet-orbit-distance="180" :outer-planet-speed="9"
+        :outer-planet-orbit-distance="330"></DrawTwoPlanet>
+    <DrawTwoPlanet :inner-planet-speed="11" :inner-planet-orbit-distance="200" :outer-planet-speed="0.5"
+        :outer-planet-orbit-distance="330">
     </DrawTwoPlanet>
-    <DrawTwoPlanet :inner-planet-speed="1" :inner-planet-orbit-distance="150" :outer-planet-speed="10"
-        :outer-planet-orbit-distance="240"></DrawTwoPlanet>
-
-    <DrawTwoPlanet :inner-planet-speed="1" :inner-planet-orbit-distance="75" :outer-planet-speed="5"
-        :outer-planet-orbit-distance="240"></DrawTwoPlanet>
+    <DrawTwoPlanet :inner-planet-speed="1.35" :inner-planet-orbit-distance="100" :outer-planet-speed="5"
+        :outer-planet-orbit-distance="330"></DrawTwoPlanet>
 </template>

@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import { defineProps, onMounted, onBeforeUnmount, ref } from 'vue';
 const canvasRef = ref(null);
-const canvasWidth = 500;
-const canvasHeight = 500;
+const canvasWidth = 750;
+const canvasHeight = 750;
 let requestId: number;
 let counter = 0;
 let twoPlanets;
 import earthSrc from '@/assets/earth.webp'
 import marsSrc from '@/assets/mars.png'
+import sunImgSrc from '@/assets/sunPng.png'
+// import starrySrc from '@/assets/starrySmall.jpg
+import starrySrc from '@/assets/hdSpace.jpg'
 
 const props = defineProps({
     innerPlanetSpeed: {
@@ -24,35 +27,32 @@ const props = defineProps({
     },
     outerPlanetOrbitDistance: {
         type: Number,
-        default: 240
+        default: 230
     }
 })
 
-function createSun(c: CanvasRenderingContext2D) {
-    // c.strokeStyle = 'orange'
-    c.fillStyle = '#ff6c00'
-    // c.moveTo(canvasWidth/2, canvasHeight/2)
-    c.beginPath()
-    c.arc(canvasWidth / 2, canvasHeight / 2, 30, 0, 2 * Math.PI)
-    c.fill();
+
+class Sun {
+    c: CanvasRenderingContext2D
+    img = HTMLImageElement
+    sunSize = 60
+    constructor(c: CanvasRenderingContext2D) {
+        this.c = c
+        this.img = new Image()
+        this.img.onload = () => {
+            c.drawImage(this.img, canvasWidth / 2 - 40, canvasHeight / 2 - 40, this.sunSize, this.sunSize)
+        }
+        this.img.src = sunImgSrc
+    }
+
+    draw() {
+        this.c.drawImage(this.img, canvasWidth / 2 - this.sunSize / 2, canvasHeight / 2 - this.sunSize / 2, this.sunSize, this.sunSize)
+    }
+
+    update() {
+        this.draw()
+    }
 }
-
-
-function createMarsOrbit(c: CanvasRenderingContext2D) {
-    c.strokeStyle = 'white'
-    c.lineWidth = 0.25
-    c.beginPath()
-    c.arc(canvasWidth / 2, canvasHeight / 2, props.outerPlanetOrbitDistance, 0, 2 * Math.PI)
-    c.stroke();
-}
-
-function createEarthOrbit(c: CanvasRenderingContext2D) {
-    c.strokeStyle = 'white'
-    c.beginPath()
-    c.arc(canvasWidth / 2, canvasHeight / 2, props.innerPlanetOrbitDistance, 0, 2 * Math.PI)
-    c.stroke();
-}
-
 
 class Planet {
     c: CanvasRenderingContext2D
@@ -87,6 +87,14 @@ class Planet {
     }
 
     draw() {
+        // To create orbit circle starts here
+        this.c.strokeStyle = 'white'
+        this.c.lineWidth = 0.25
+        this.c.beginPath()
+        this.c.arc(canvasWidth / 2, canvasHeight / 2, this.orbitDistance, 0, 2 * Math.PI)
+        this.c.stroke();
+        // To create orbit circle ends here
+
         this.c.drawImage(this.img, this.planetXPos, this.planetYPos, this.planetSize, this.planetSize)
     }
 
@@ -103,35 +111,65 @@ class Planet {
 
 class DrawTwoPlanetRelativePosition {
     c: CanvasRenderingContext2D
-    earth: Planet
-    mars: Planet
+    sun: Sun
+    innerPlanet: Planet
+    outerPlanet: Planet
+    spaceBgImg: HTMLImageElement
+
+    spiderPoints: Array<any> = []
 
     constructor(c: CanvasRenderingContext2D) {
         this.c = c
-        this.earth = new Planet(c, props.innerPlanetOrbitDistance, props.innerPlanetSpeed, earthSrc, 24)
-        this.mars = new Planet(c, props.outerPlanetOrbitDistance, props.outerPlanetSpeed, marsSrc, 36)
+        this.sun = new Sun(c)
+        this.innerPlanet = new Planet(c, props.innerPlanetOrbitDistance, props.innerPlanetSpeed, earthSrc, 24)
+        this.outerPlanet = new Planet(c, props.outerPlanetOrbitDistance, props.outerPlanetSpeed, marsSrc, 36)
+        // this.spaceBgImg = new Image()
+        // this.spaceBgImg.onload = () => {
+        //     this.c.drawImage(this.spaceBgImg, 0, 0)
+        // }
+        // this.spaceBgImg.src = starrySrc
     }
 
     draw() {
         this.c.beginPath();
-        this.c.moveTo(this.mars.x, this.mars.y);
-        this.c.lineTo(this.earth.x, this.earth.y)
+        this.c.moveTo(this.outerPlanet.x, this.outerPlanet.y);
+        this.c.lineTo(this.innerPlanet.x, this.innerPlanet.y)
         this.c.stroke()
+
+        for (let planet of this.spiderPoints) {
+            this.c.beginPath();
+            this.c.moveTo(planet.outerPlanet.x, planet.outerPlanet.y);
+            this.c.lineTo(planet.innerPlanet.x, planet.innerPlanet.y)
+            this.c.stroke()
+        }
     }
 
     update() {
-        this.earth.update();
-        this.mars.update();
+        // this.c.drawImage(this.spaceBgImg, 0, 0)
+        this.spiderPoints.push({
+            innerPlanet: {
+                x: this.innerPlanet.x,
+                y: this.innerPlanet.y
+            },
+            outerPlanet: {
+                x: this.outerPlanet.x,
+                y: this.outerPlanet.y
+            }
+        })
         this.draw();
+        this.sun.update();
+        this.innerPlanet.update();
+        this.outerPlanet.update();
     }
 }
 
 function animate(c: CanvasRenderingContext2D) {
     counter++;
     // console.log(`counter called`, counter)
-    if (counter <= 360) {
-        requestId = requestAnimationFrame(() => animate(c));
+    if (counter <= 2160) {
+        c.clearRect(0, 0, canvasWidth, canvasHeight)
         twoPlanets.update();
+        requestId = requestAnimationFrame(() => animate(c));
     }
 }
 
@@ -140,10 +178,6 @@ onMounted(() => {
     canvas.height = canvasHeight;
     canvas.width = canvasWidth;
     const c: CanvasRenderingContext2D = canvas.getContext('2d');
-    createSun(c);
-    createMarsOrbit(c);
-    createEarthOrbit(c);
-
     twoPlanets = new DrawTwoPlanetRelativePosition(c)
     animate(c);
 })
