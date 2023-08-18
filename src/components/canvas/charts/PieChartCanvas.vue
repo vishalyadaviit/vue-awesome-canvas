@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 const canvasRef = ref(null)
 
-function draw(dataPoints: Array<number>) {
+function draw() {
     const canvas: HTMLCanvasElement = canvasRef.value!;
     const c: CanvasRenderingContext2D = canvas.getContext("2d")!;
 
@@ -15,12 +15,11 @@ function draw(dataPoints: Array<number>) {
     c.moveTo(250, 250);
     c.arc(250, 250, 100, 0, 1 * Math.PI)
     c.stroke();
-
 }
 
 onMounted(() => {
-    const dataPoints = [16, 68, 20, 30, 54];
-    draw(dataPoints);
+    // const dataPoints = [16, 68, 20, 30, 54];
+    draw();
 })
 
 </script>

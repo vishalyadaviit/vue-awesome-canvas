@@ -9,6 +9,17 @@ const router = createRouter({
       component: () => import("@/pages/index.vue"),
     },
     {
+      path: "/fyndster",
+      name: "fyndster",
+      component: () => import("@/pages/fyndster/index.vue"),
+      children: [
+        {
+          path: "create-card-intro",
+          component: () => import("@/pages/fyndster/create-card-intro.vue"),
+        },
+      ],
+    },
+    {
       path: "/examples",
       name: "examples",
       component: () => import("@/pages/examples/index.vue"),

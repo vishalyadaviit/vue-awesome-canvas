@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import { defineProps, onMounted, onBeforeUnmount, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 const canvasRef = ref(null);
 const canvasWidth = 750;
 const canvasHeight = 750;
 let requestId: number;
 let counter = 0;
-let twoPlanets;
+let twoPlanets: DrawTwoPlanetRelativePosition;
 import earthSrc from '@/assets/earth.webp'
 import marsSrc from '@/assets/mars.png'
 import sunImgSrc from '@/assets/sunPng.png'
 // import starrySrc from '@/assets/starrySmall.jpg
-import starrySrc from '@/assets/hdSpace.jpg'
+// import starrySrc from '@/assets/hdSpace.jpg'
 
 const props = defineProps({
     innerPlanetSpeed: {
@@ -34,7 +34,7 @@ const props = defineProps({
 
 class Sun {
     c: CanvasRenderingContext2D
-    img = HTMLImageElement
+    img: HTMLImageElement
     sunSize = 60
     constructor(c: CanvasRenderingContext2D) {
         this.c = c
@@ -114,8 +114,6 @@ class DrawTwoPlanetRelativePosition {
     sun: Sun
     innerPlanet: Planet
     outerPlanet: Planet
-    spaceBgImg: HTMLImageElement
-
     spiderPoints: Array<any> = []
 
     constructor(c: CanvasRenderingContext2D) {
@@ -123,11 +121,6 @@ class DrawTwoPlanetRelativePosition {
         this.sun = new Sun(c)
         this.innerPlanet = new Planet(c, props.innerPlanetOrbitDistance, props.innerPlanetSpeed, earthSrc, 24)
         this.outerPlanet = new Planet(c, props.outerPlanetOrbitDistance, props.outerPlanetSpeed, marsSrc, 36)
-        // this.spaceBgImg = new Image()
-        // this.spaceBgImg.onload = () => {
-        //     this.c.drawImage(this.spaceBgImg, 0, 0)
-        // }
-        // this.spaceBgImg.src = starrySrc
     }
 
     draw() {
@@ -176,7 +169,7 @@ onMounted(() => {
     const canvas: HTMLCanvasElement = canvasRef.value!
     canvas.height = canvasHeight;
     canvas.width = canvasWidth;
-    const c: CanvasRenderingContext2D = canvas.getContext('2d');
+    const c: CanvasRenderingContext2D = canvas.getContext('2d')!;
     twoPlanets = new DrawTwoPlanetRelativePosition(c)
     animate(c);
 })

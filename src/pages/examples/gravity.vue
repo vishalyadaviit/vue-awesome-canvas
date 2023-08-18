@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeMount, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const canvasRef = ref(null);
 const canvasWidth = 1000;
 const canvasHeight = 600;
-let balls;
+let balls: Array<Ball>;
 let requestId: number
 const defaultDy = 2;
 const gravity = 1;

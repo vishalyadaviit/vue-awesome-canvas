@@ -10,6 +10,9 @@
       <li class="inline-block py-2 px-4">
         <router-link to="/examples">Examples</router-link>
       </li>
+      <li class="inline-block py-2 px-4">
+        <router-link to="/fyndster">Fyndster</router-link>
+      </li>
     </ul>
   </div>
   <div class="p-2 container mx-auto">

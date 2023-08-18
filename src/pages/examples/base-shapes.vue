@@ -8,7 +8,7 @@ import earthSrc from '@/assets/earth.webp'
 const canvasRef = ref(null)
 const canvasWidth = 400;
 const canvasHeight = 400;
-let requestId;
+let requestId: any;
 let c: CanvasRenderingContext2D
 let earth: Earth
 
@@ -71,7 +71,7 @@ onMounted(() => {
     const canvas: HTMLCanvasElement = canvasRef.value!
     canvas.width = canvasWidth
     canvas.height = canvasHeight
-    c = canvas.getContext('2d')
+    c = canvas.getContext('2d')!
     earth = new Earth(c, canvasWidth / 2, canvasHeight / 2, 75, 2)
     animate()
 })

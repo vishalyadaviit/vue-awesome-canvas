@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted, defineProps, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 const canvasRef = ref(null)
 let particles: Array<Particle>
-let requestId;
-let c2d;
+let requestId: any;
+let c2d: CanvasRenderingContext2D;
+
+const canvasWidth = 500
+const canvasHeight = 500
+const colorPallete = [
+    '#ffbe0b',
+    '#fb5607',
+    '#ff006e',
+    '#8338ec',
+    '#3a86ff'
+];
 const mousePos = {
     x: canvasWidth / 2,
     y: canvasHeight / 2
@@ -23,16 +33,6 @@ const props = defineProps({
         default: () => 30
     }
 })
-
-const canvasWidth = 500
-const canvasHeight = 500
-const colorPallete = [
-    '#ffbe0b',
-    '#fb5607',
-    '#ff006e',
-    '#8338ec',
-    '#3a86ff'
-];
 
 function setMouseCoords(event: any) {
     const canvas: HTMLCanvasElement = canvasRef.value!
@@ -64,7 +64,7 @@ class Particle {
         this.color = colorPallete[Math.floor(Math.random() * 5)]
     }
 
-    draw(lastPoint) {
+    draw(lastPoint: any) {
         this.c.beginPath()
         this.c.strokeStyle = this.color
         this.c.lineWidth = this.size
@@ -103,7 +103,8 @@ function creatParticles(c: CanvasRenderingContext2D) {
     const result = []
     for (let i = 0; i < props.maxParticles; i++) {
         const size = randomIntFromRange(3, 6);
-        const ringRadius = randomIntFromRange(...props.ringRadiusRange);
+        const { ringRadiusRange } = props;
+        const ringRadius = randomIntFromRange(ringRadiusRange[0], ringRadiusRange[1]);
         const angularVelocity = Math.random() * props.maxAngularVelocity;
         result.push(new Particle(c, size, ringRadius, angularVelocity))
     }
