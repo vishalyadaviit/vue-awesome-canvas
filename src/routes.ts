@@ -20,6 +20,17 @@ const router = createRouter({
       ],
     },
     {
+      path: "/spirographs",
+      name: "spirographs",
+      component: () => import("@/pages/spirographs/index.vue"),
+      children: [
+        {
+          path: "two-circle-path",
+          component: () => import("@/pages/spirographs/two-circle-path.vue"),
+        },
+      ],
+    },
+    {
       path: "/examples",
       name: "examples",
       component: () => import("@/pages/examples/index.vue"),
