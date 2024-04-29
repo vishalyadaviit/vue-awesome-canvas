@@ -1,3 +1,8 @@
+type IPoint = {
+  x: number;
+  y: number;
+};
+
 class Point {
   c: CanvasRenderingContext2D;
   size: number;
@@ -7,7 +12,7 @@ class Point {
   currentX: number;
   currentY: number;
   dTheta: number = 0;
-  allPoints: Array = [];
+  allPoints: Array<IPoint> = [];
 
   constructor(
     c: CanvasRenderingContext2D,
@@ -26,7 +31,7 @@ class Point {
   }
 
   draw() {
-    const { size, x, y } = this;
+    const { size } = this;
     this.c.fillStyle = "white";
     this.c.beginPath();
     this.c.arc(this.currentX, this.currentY, size, 0, 2 * Math.PI);
@@ -60,10 +65,10 @@ class Point {
 
     this.currentX =
       this.x +
-      radius * Math.cos(((this.dTheta + initialTheta) / 180) * Math.PI);
+      radius * Math.cos(((this.dTheta + initialTheta) / 180 / 9) * Math.PI);
     this.currentY =
       this.y +
-      radius * -Math.sin(((this.dTheta + initialTheta) / 180) * Math.PI);
+      radius * -Math.sin(((this.dTheta + initialTheta) / 180 / 10) * Math.PI);
 
     this.draw();
   }

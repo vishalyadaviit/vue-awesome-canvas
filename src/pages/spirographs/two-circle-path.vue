@@ -4,7 +4,7 @@ import Point from "@/components/atoms/Point"
 import Circle from '@/components/atoms/Circle';
 
 const totalAnimations = 1200;
-const goldenRatio = (1 + Math.sqrt(5)) / 2;
+// const goldenRatio = (1 + Math.sqrt(5)) / 2;
 const canvasRef = ref(null)
 const canvasWidth = 500;
 const canvasHeight = 500;
@@ -29,8 +29,8 @@ function animate(c: CanvasRenderingContext2D) {
         circle2 = new Circle(c, 50, 250, 50)
         circle2.draw();
 
-        point1.rotate(50, 1);
-        point2.rotate(50, 1, 15);
+        point1.rotate(50, 20);
+        point2.rotate(50, 20, 15);
 
         const crossPoints = [];
 
