@@ -2,7 +2,7 @@ pipeline {
     agent {
          docker {
             image 'node:18.16.0-alpine3.17'
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for Docker inside Docker (DinD)
+            args '-v /var/run/docker.sock:/var/run/docker.sock --tls=false' // Mount Docker socket for Docker inside Docker (DinD)
         }
     }
     stages {
